@@ -1,5 +1,3 @@
-import BaseAdapter from "./base_adaper";
-
 /**
  * A delegation set groups delegations of a same network
  */
@@ -18,5 +16,9 @@ export interface Delegation {
 export interface SupportedNetwork {
   title: string
   currency: string
-  adapter: BaseAdapter
+  adapter: Adapter
+}
+
+export interface Adapter {
+  findAllByDelegateAddress: (address: string) => Promise<Delegation[]>
 }

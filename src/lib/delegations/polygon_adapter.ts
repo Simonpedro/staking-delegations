@@ -1,7 +1,6 @@
-import BaseAdapter from "./base_adaper";
-import { Delegation } from "./types";
+import { Adapter, Delegation } from "./types";
 
-export default class PolygonAdapter extends BaseAdapter {
+export default class PolygonAdapter implements Adapter {
   findAllByDelegateAddress: (address: string) => Promise<Delegation[]> = (address) => {
     return Promise.resolve([
       {
