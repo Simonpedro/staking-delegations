@@ -8,9 +8,8 @@ export interface DelegationSet {
 }
 
 export interface Delegation {
-  id: string
-  amount: number
-  rewards?: number
+  amount: string
+  rewards?: string
 }
 
 export interface SupportedNetwork {

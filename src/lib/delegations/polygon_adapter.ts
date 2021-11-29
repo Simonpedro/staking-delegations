@@ -1,18 +1,17 @@
+import { PolygonRpsClient } from "lib/polygonClient";
 import { Adapter, Delegation } from "./types";
+import formatFromWei from "lib/formatFromWei";
 
 export default class PolygonAdapter implements Adapter {
-  findAllByDelegateAddress: (address: string) => Promise<Delegation[]> = (address) => {
-    return Promise.resolve([
-      {
-        id: "polygon-1",
-        amount: 3,
-        rewards: 0.7,
-      },
-      {
-        id: "polygon-2",
-        amount: 10.3,
-        rewards: 2.65,
-      }
-    ])
+  client = new PolygonRpsClient()
+
+  findAllByDelegateAddress: (address: string) => Promise<Delegation[]> = async (address) => {
+
+    const data = await this.client.fetchDelegationsByAddress(address);
+
+    return data.result.map(delegation => ({
+      amount: formatFromWei(delegation.stake),
+      rewards: formatFromWei(delegation.claimedReward)
+    }))
   };
 }

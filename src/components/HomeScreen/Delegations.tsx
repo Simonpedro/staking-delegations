@@ -34,9 +34,9 @@ const Delegations = ({ delegationSets }: DelegationsProps) => {
 
   return (
     <Wrapper>
-      {delegations.map((delegation) => (
+      {delegations.map((delegation, index) => (
         <Card
-          key={delegation.id}
+          key={index}
           css={{
             minHeight: "100px",
             display: "flex",
@@ -50,11 +50,13 @@ const Delegations = ({ delegationSets }: DelegationsProps) => {
             value={`${delegation.amount} ${delegation.currency}`}
             color="$mainBlue"
           />
-          <InfoItem
-            label="Rewards"
-            value={`${delegation.rewards} ${delegation.currency}`}
-            color="$mainBlue"
-          />
+          {delegation.rewards && (
+            <InfoItem
+              label="Rewards"
+              value={`${delegation.rewards} ${delegation.currency}`}
+              color="$mainBlue"
+            />
+          )}
         </Card>
       ))}
     </Wrapper>
@@ -67,7 +69,7 @@ const Wrapper = styled("div", {
   display: "grid",
   gridTemplateColumns: "1fr",
   gap: "$space$3",
-  "@xs": {
+  "@md": {
     gridTemplateColumns: "1fr 1fr",
   },
 });

@@ -1,5 +1,4 @@
 import { createStitches } from "@stitches/react";
-import type * as Stitches from '@stitches/react';
 
 
 const SPACING_UNIT = 8
@@ -39,6 +38,7 @@ const stitches = createStitches({
     xs: '(min-width: 640px)',
     sm: '(min-width: 768px)',
     md: '(min-width: 1024px)',
+    lg: '(min-width: 1500px)',
   },
 })
 
