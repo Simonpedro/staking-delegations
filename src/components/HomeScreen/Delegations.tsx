@@ -47,7 +47,7 @@ const Delegations = ({ delegationSets }: DelegationsProps) => {
           <InfoItem label="Network" value={`${delegation.network}`} />
           <InfoItem
             label="Amount"
-            value={`${delegation.amount} ${delegation.currency}`}
+            value={`${delegation.stake} ${delegation.currency}`}
             color="$mainBlue"
           />
           {delegation.rewards && (

@@ -8,7 +8,7 @@ export interface DelegationSet {
 }
 
 export interface Delegation {
-  amount: string
+  stake: string
   rewards?: string
 }
 

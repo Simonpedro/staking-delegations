@@ -43,9 +43,8 @@ Delegations.args = {
       network: "Polygon",
       delegations: [
         {
-          id: "polygon-1",
-          amount: 1.32,
-          rewards: 0.05,
+          stake: "1.32",
+          rewards: "0.05",
         },
       ],
     },
@@ -54,9 +53,8 @@ Delegations.args = {
       network: "Solana",
       delegations: [
         {
-          id: "solana-1",
-          amount: 3.35,
-          rewards: 0.15,
+          stake: "3.35",
+          rewards: "0.15",
         },
       ],
     },
