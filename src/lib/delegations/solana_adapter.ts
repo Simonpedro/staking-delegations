@@ -1,35 +1,25 @@
+import { SolanaClient } from "lib/solanaClient";
 import { Adapter, Delegation } from "./types";
-import * as web3 from '@solana/web3.js';
 
 export default class SolanaAdapter implements Adapter {
-  connection: web3.Connection;
-
-  constructor() {
-    this.connection = new web3.Connection(web3.clusterApiUrl("mainnet-beta"), "confirmed")
-  }
+  client = new SolanaClient()
 
   findAllByDelegateAddress: (address: string) => Promise<Delegation[]> = async (address) => {
-    const publicKey = new web3.PublicKey(ensureb58Address(address))
+    const stakes = await this.client.fetchStakesByAddres(ensureb58Address(address))
 
-    const result = await this.connection.getParsedAccountInfo(publicKey)
-    const accountData = result.value?.data as web3.ParsedAccountData
-
-    const stake = accountData.parsed.info.stake.delegation.stake
-
-    return Promise.resolve([
-      {
-        stake: formatToSol(stake),
-      },
-    ])
-  };
+    return stakes.data.map(stake => ({
+      stake: formatToSol(stake.lamports),
+    }))
+  }
 }
 
 const ensureb58Address = (address: string) => address.startsWith("0x") ? address.replace("0x", "") : address
 
-const formatToSol = (lamports: string) => {
+const formatToSol = (lamports: number) => {
   return Intl.NumberFormat().format(lamportsToSol(lamports))
 }
 
-const lamportsToSol = (lamports: string) => {
-  return Number.parseFloat(lamports) / web3.LAMPORTS_PER_SOL
+const lamportsToSol = (lamports: number) => {
+  const LAMPORTS_PER_SOL = 1000000000
+  return lamports / LAMPORTS_PER_SOL
 }
