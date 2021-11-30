@@ -27,7 +27,7 @@ const Delegations = ({ delegationSets }: DelegationsProps) => {
           padding: "$space$6 0",
         }}
       >
-        We couldn&apos;t find any delegations for the current address.
+        We couldn&apos;t find any delegations for the current addresses.
       </Text>
     );
   }

@@ -12,7 +12,12 @@ export interface Delegation {
   rewards?: string
 }
 
+export enum Network {
+  POLYGON = "polygon",
+  SOLANA = "solana"
+}
 export interface SupportedNetwork {
+  id: Network
   title: string
   currency: string
   adapter: Adapter

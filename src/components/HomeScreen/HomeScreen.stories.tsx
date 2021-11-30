@@ -23,7 +23,20 @@ export const SetupAddress: Story<HomeScreenProps> = (args) => {
 SetupAddress.args = {
   user: {
     name: "John",
-    address: "",
+    addresses: [
+      {
+        id: 1,
+        network: "polygon",
+        userId: 1,
+        value: "",
+      },
+      {
+        id: 2,
+        network: "solana",
+        userId: 1,
+        value: "",
+      },
+    ],
   },
   delegationSets: [],
 };
@@ -35,7 +48,20 @@ export const Delegations: Story<HomeScreenProps> = (args) => {
 Delegations.args = {
   user: {
     name: "John",
-    address: "0x05158d7a59fa8ac5007b3c8babaa216568fd32b3",
+    addresses: [
+      {
+        id: 1,
+        network: "polygon",
+        userId: 1,
+        value: "0x05158d7a59fa8ac5007b3c8babaa216568fd32b3",
+      },
+      {
+        id: 2,
+        network: "solana",
+        userId: 1,
+        value: "2RRBCVLXQYJWqaut9zFdwWJmrQbXg4xqmReLiCWfE7o4",
+      },
+    ],
   },
   delegationSets: [
     {

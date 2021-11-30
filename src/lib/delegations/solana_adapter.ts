@@ -18,7 +18,7 @@ export default class SolanaAdapter implements Adapter {
 
     return Promise.resolve([
       {
-        amount: formatToSol(stake),
+        stake: formatToSol(stake),
       },
     ])
   };

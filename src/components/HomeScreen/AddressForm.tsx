@@ -6,13 +6,16 @@ import Card from "components/Card";
 import Stack from "components/Stack";
 import Text from "components/Text";
 import TextField from "components/TextField";
+import { Address } from ".prisma/client";
+import { NETWORK_DEFINITIONS } from "lib/delegations/network_definitions";
+import { Network } from "lib/delegations/types";
 
-interface AddressFormProps {
-  address: string;
-  onUpdateAddress: (address: string) => void;
+export interface AddressFormProps {
+  addresses: Address[];
+  onUpdateAddresses: (addresses: Record<Network, string>) => void;
 }
 
-const AddressForm = ({ address, onUpdateAddress }: AddressFormProps) => {
+const AddressForm = ({ addresses, onUpdateAddresses }: AddressFormProps) => {
   const {
     values,
     errors,
@@ -21,28 +24,38 @@ const AddressForm = ({ address, onUpdateAddress }: AddressFormProps) => {
     handleChange,
     isSubmitting,
   } = useFormik({
-    initialValues: {
-      address,
-    },
+    initialValues: Object.fromEntries(
+      NETWORK_DEFINITIONS.map((network) => [
+        network.id,
+        addresses.find((address) => address.network === network.id)?.value ||
+          "",
+      ]),
+    ) as Record<Network, string>,
     validationSchema,
     onSubmit: (values) => {
-      onUpdateAddress(values.address);
+      onUpdateAddresses(values);
     },
   });
 
   return (
     <Card>
       <Stack spacing={2} css={{ maxWidth: "550px" }}>
-        <Text>Let&apos;s set up your address</Text>
-        <Stack direction="row" spacing={1}>
-          <TextField
-            name="address"
-            value={values.address}
-            error={touched.address && errors.address}
-            onChange={handleChange}
-            placeholder="Address"
-            fullWidth
-          />
+        <Text>Let&apos;s set up your addresses</Text>
+
+        <Stack direction="column" spacing={3}>
+          {NETWORK_DEFINITIONS.map((network) => (
+            <TextField
+              key={network.id}
+              name={network.id}
+              value={values[network.id]}
+              error={touched[network.id] && errors[network.id]}
+              onChange={handleChange}
+              label={network.title}
+              placeholder="Address"
+              fullWidth
+            />
+          ))}
+
           <Button onClick={() => handleSubmit()} disabled={isSubmitting}>
             Save
           </Button>
@@ -54,4 +67,8 @@ const AddressForm = ({ address, onUpdateAddress }: AddressFormProps) => {
 
 export default AddressForm;
 
-const validationSchema = Yup.object({ address: addressSchema });
+const validationSchema = Yup.object(
+  Object.fromEntries(
+    NETWORK_DEFINITIONS.map((network) => [network.id, addressSchema]),
+  ),
+);

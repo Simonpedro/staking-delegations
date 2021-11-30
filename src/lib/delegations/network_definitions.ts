@@ -1,17 +1,18 @@
 import PolygonAdapter from "./polygon_adapter";
 import SolanaAdapter from "./solana_adapter";
-import { SupportedNetwork } from "./types";
+import { Network, SupportedNetwork } from "./types";
 
-export const NETWORK_DEFINITIONS: Record<string, SupportedNetwork> = {
-  polygon: {
+export const NETWORK_DEFINITIONS: SupportedNetwork[] = [
+  {
+    id: Network.POLYGON,
     title: "Polygon",
     currency: "MATIC",
     adapter: new PolygonAdapter(),
   },
-
-  solana: {
+  {
+    id: Network.SOLANA,
     title: "Solana",
     currency: "SOL",
     adapter: new SolanaAdapter(),
   },
-};
+];

@@ -3,15 +3,12 @@ import { getSession, signOut } from "next-auth/react";
 import HomeScreen from "components/HomeScreen";
 import { useRouter } from "next/dist/client/router";
 import prisma from "lib/prisma";
-import { DelegationSet } from "lib/delegations/types";
 import { fetchDelegationSets } from "lib/delegations";
+import { HomeScreenProps } from "components/HomeScreen/HomeScreen";
 
 interface HomeProps {
-  user: {
-    name: string;
-    address: string;
-  };
-  delegationSets: DelegationSet[];
+  user: HomeScreenProps["user"];
+  delegationSets: HomeScreenProps["delegationSets"];
 }
 
 const Home: NextPage<HomeProps> = ({ user, delegationSets }) => {
@@ -21,10 +18,10 @@ const Home: NextPage<HomeProps> = ({ user, delegationSets }) => {
     signOut({ redirect: true });
   };
 
-  const handleUpdateAddress = (address: string) => {
-    fetch("api/update-address", {
+  const handleUpdateAddress: HomeScreenProps["onUpdateAddresses"] = (addresses) => {
+    fetch("api/update-addresses", {
       method: "POST",
-      body: JSON.stringify({ address }),
+      body: JSON.stringify(addresses),
     }).then((res) => {
       if (res.ok) {
         router.reload();
@@ -39,7 +36,7 @@ const Home: NextPage<HomeProps> = ({ user, delegationSets }) => {
     <HomeScreen
       user={user}
       onLogout={handleLogout}
-      onUpdateAddress={handleUpdateAddress}
+      onUpdateAddresses={handleUpdateAddress}
       delegationSets={delegationSets}
     />
   );
@@ -65,7 +62,7 @@ export const getServerSideProps: GetServerSideProps<HomeProps> = async (
 
   const user = await prisma.user.findUnique({
     where: { email: session.user.email },
-    select: { id: true, email: true, name: true, address: true },
+    select: { id: true, email: true, name: true, addresses: true },
   });
 
   if (!user) {
@@ -75,9 +72,7 @@ export const getServerSideProps: GetServerSideProps<HomeProps> = async (
   return {
     props: {
       user,
-      delegationSets: user.address
-        ? await fetchDelegationSets(user.address)
-        : [],
+      delegationSets: await fetchDelegationSets(user.addresses),
     },
   };
 };

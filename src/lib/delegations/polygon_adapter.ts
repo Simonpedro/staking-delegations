@@ -10,7 +10,7 @@ export default class PolygonAdapter implements Adapter {
     const data = await this.client.fetchDelegationsByAddress(address);
 
     return data.result.map(delegation => ({
-      amount: formatToMatic(delegation.stake),
+      stake: formatToMatic(delegation.stake),
       rewards: formatToMatic(delegation.claimedReward)
     }))
   };

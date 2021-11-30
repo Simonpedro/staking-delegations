@@ -1,15 +1,22 @@
+import { Address } from ".prisma/client";
 import { NETWORK_DEFINITIONS } from "./network_definitions";
 import { DelegationSet } from "./types";
 
 export const fetchDelegationSets = (
-  address: string,
+  addresses: Address[],
 ): Promise<DelegationSet[]> => {
   return Promise.all(
-    Object.entries(NETWORK_DEFINITIONS).map(async ([, network]) => {
+    NETWORK_DEFINITIONS.map(async (network, config) => {
+      const address = addresses.find(
+        (address) => address.network === network.id,
+      );
+
       return {
         network: network.title,
         currency: network.currency,
-        delegations: await network.adapter.findAllByDelegateAddress(address),
+        delegations: address?.value
+          ? await network.adapter.findAllByDelegateAddress(address.value)
+          : [],
       };
     }),
   );

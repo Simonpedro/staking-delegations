@@ -1,23 +1,23 @@
+import { Address } from ".prisma/client";
 import Box from "components/Box";
 import Container from "components/Container";
 import Link from "components/Link";
 import Stack from "components/Stack";
 import Text from "components/Text";
 import { DelegationSet } from "lib/delegations/types";
-import shortenAddress from "lib/shortenAddress";
 import { useState } from "react";
 import { styled } from "stitches.config";
-import AddressForm from "./AddressForm";
+import AddressForm, { AddressFormProps } from "./AddressForm";
 import Delegations from "./Delegations";
 
 export interface HomeScreenProps {
   user: {
     name: string;
-    address: string;
+    addresses: Address[];
   };
   delegationSets: DelegationSet[];
   onLogout: () => void;
-  onUpdateAddress: (address: string) => void;
+  onUpdateAddresses: AddressFormProps["onUpdateAddresses"];
 }
 
 // If there was more than one "protected" screen, we would have created a Layout component.
@@ -25,9 +25,10 @@ const HomeScreen = ({
   user,
   delegationSets,
   onLogout,
-  onUpdateAddress,
+  onUpdateAddresses,
 }: HomeScreenProps) => {
-  const [updatingAddress, setUpdatingAddress] = useState(false);
+  const [updatingAddresses, setUpdatingAddresses] = useState(false);
+  const someEmptyAddress = user.addresses.some((address) => !address.value);
 
   return (
     <Container>
@@ -45,26 +46,19 @@ const HomeScreen = ({
             Logout
           </Link>
         </HeadTop>
-        <Text color="secondary" variant="body2" title={user.address}>
-          Address: {shortenAddress(user.address)}
-          <Link
-            css={{ paddingLeft: "$space$1" }}
-            type="button"
-            onClick={() => setUpdatingAddress(true)}
-          >
-            Edit
-          </Link>
-        </Text>
+        <Link type="button" onClick={() => setUpdatingAddresses(true)}>
+          Edit addresses
+        </Link>
       </Header>
 
       <Stack spacing={4}>
-        {(!user.address || updatingAddress) && (
+        {(someEmptyAddress || updatingAddresses) && (
           <AddressForm
-            address={user.address}
-            onUpdateAddress={onUpdateAddress}
+            addresses={user.addresses}
+            onUpdateAddresses={onUpdateAddresses}
           />
         )}
-        {user.address && <Delegations delegationSets={delegationSets} />}
+        {!someEmptyAddress && <Delegations delegationSets={delegationSets} />}
       </Stack>
     </Container>
   );
