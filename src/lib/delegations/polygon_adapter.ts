@@ -1,6 +1,6 @@
 import { PolygonRpsClient } from "lib/polygonClient";
 import { Adapter, Delegation } from "./types";
-import formatFromWei from "lib/formatFromWei";
+import Web3 from "web3";
 
 export default class PolygonAdapter implements Adapter {
   client = new PolygonRpsClient()
@@ -10,8 +10,13 @@ export default class PolygonAdapter implements Adapter {
     const data = await this.client.fetchDelegationsByAddress(address);
 
     return data.result.map(delegation => ({
-      amount: formatFromWei(delegation.stake),
-      rewards: formatFromWei(delegation.claimedReward)
+      amount: formatToMatic(delegation.stake),
+      rewards: formatToMatic(delegation.claimedReward)
     }))
   };
+}
+
+const formatToMatic = (value: string) => {
+  return new Intl.NumberFormat()
+    .format(Number.parseFloat(Web3.utils.fromWei(value)))
 }
